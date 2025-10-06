@@ -7,6 +7,7 @@ import {
   SocketConfig,
   WASocket,
   AuthenticationState,
+  ConnectionState,
 } from "baileys";
 import { rmSync, existsSync } from "fs";
 import { join } from "path";
@@ -15,7 +16,7 @@ class WhatsAppHandler {
   private sock!: WASocket;
   private qrAttempts = 0;
   private readonly maxQrAttempts = 3;
-  private saveCreds: () => Promise<void> | null;
+  private saveCreds: (() => Promise<void>) | null;
   //private readonly restartSock: () => Promise<void>;
   private authState: AuthenticationState | undefined;
 
@@ -48,7 +49,9 @@ class WhatsAppHandler {
     console.log("Credenciales actualizadas:", q);
     console.log("-----------------------------------------------------------");
 
-    this.saveCreds();
+    if (this.saveCreds) {
+      this.saveCreds();
+    }
   }
   /**
    * Maneja los mensajes entrantes y los muestra en la consola.
@@ -139,7 +142,7 @@ class WhatsAppHandler {
 
   async onConnectionUpdateClose(
     connection: string,
-    lastDisconnect: { error: any }
+    lastDisconnect?: { error: any }
   ) {
     console.log(
       "❌ Conexión cerrada",
@@ -169,11 +172,7 @@ class WhatsAppHandler {
       //this.restartSock();
     }
   }
-  async onConnectionUpdate(update: {
-    connection: string;
-    lastDisconnect?: { error: any };
-    qr?: string;
-  }) {
+  async onConnectionUpdate(update: Partial<ConnectionState>) {
     console.log(
       "--------------------[ sock.ev.on - connection.update ]-------------------------"
     );
@@ -189,7 +188,7 @@ class WhatsAppHandler {
     if (connection === "open") {
       console.log("✅ Conectado a WhatsApp");
     } else if (connection === "close") {
-      this.onConnectionUpdateClose(connection, lastDisconnect);
+      this.onConnectionUpdateClose(connection!, lastDisconnect);
     }
   }
 
