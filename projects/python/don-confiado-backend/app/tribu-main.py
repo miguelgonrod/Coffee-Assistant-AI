@@ -9,4 +9,4 @@ if __name__ == "__main__":
     app.include_router(hello_webservice_api_router)
     app.include_router(business_webservice_api_router)
     app.include_router(chat_webservice_api_router)
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

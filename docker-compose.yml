@@ -1,0 +1,35 @@
+services:
+  coffetto-backend:
+    build: ./projects/python/don-confiado-backend
+    container_name: coffetto_backend_service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./projects/python/don-confiado-backend/app:/app
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+    restart: unless-stopped
+    networks:
+      - coffetto_network
+
+  coffetto-whatsapp:
+    build: ./projects/typescript/don-confiado-whatsapp-qr
+    container_name: coffetto_whatsapp_service
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./projects/typescript/don-confiado-whatsapp-qr:/app
+      - /app/node_modules
+    environment:
+      - BACKEND_URL=http://coffetto-backend:8000
+    depends_on:
+      - coffetto-backend
+    restart: unless-stopped
+    networks:
+      - coffetto_network
+
+networks:
+  coffetto_network:
+    driver: bridge

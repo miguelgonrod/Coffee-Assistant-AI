@@ -84,7 +84,9 @@ class WhatsAppHandler {
                           msg.message.extendedTextMessage?.text ||
                           "No texto disponible";
 
-          fetch("http://127.0.0.1:8000/api/chat_v1.1", {
+          const backendUrl = process.env.BACKEND_URL || "http://coffetto-backend:8000";
+          
+          fetch(`${backendUrl}/api/chat_v1.1`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
