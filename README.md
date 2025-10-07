@@ -250,7 +250,7 @@ CREATE TABLE public.metodos_preparacion (
 
 ## 📄 Licencia
 
-Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+Este proyecto está bajo la Licencia BSD 3-Clause - ver el archivo [LICENSE](LICENSE) para detalles.
 
 ## 🆘 Soporte
 
